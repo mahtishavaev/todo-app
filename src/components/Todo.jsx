@@ -1,3 +1,4 @@
+import uniqueId from "lodash.uniqueid";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CheckBox } from "./CheckBox";
@@ -159,7 +160,7 @@ const initialState = [
 ];
 
 export const Todo = () => {
-  const [todos, setTodos] = useState(initialState);
+  const [todos, setTodos] = useState([]);
   const [filteredTodos, setFilteredTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filter, setFilter] = useState("All");
@@ -182,10 +183,9 @@ export const Todo = () => {
         return [
           ...prev,
           {
-            id: prev[prev.length - 1].id + 1,
+            id: uniqueId("id-"),
             name: inputValue,
             isCompleted: false,
-            isVisible: true,
           },
         ];
       });
@@ -202,6 +202,12 @@ export const Todo = () => {
   };
 
   useEffect(() => {
+    localStorage.getItem("todos") === null
+      ? localStorage.setItem("todos", JSON.stringify([]))
+      : setTodos(JSON.parse(localStorage.getItem("todos")));
+  }, []);
+
+  useEffect(() => {
     const filterTasks = () => {
       switch (filter) {
         case "Active":
@@ -215,6 +221,7 @@ export const Todo = () => {
       }
     };
     filterTasks();
+    localStorage.setItem("todos", JSON.stringify(todos));
   }, [filter, todos]);
 
   return (
