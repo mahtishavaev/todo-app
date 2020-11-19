@@ -136,29 +136,6 @@ const Footer = styled.footer`
   padding-bottom: 20px;
 `;
 
-const initialState = [
-  {
-    id: 1,
-    name: "Do coding challenges",
-    isCompleted: false,
-  },
-  {
-    id: 2,
-    name: "Do coding challenges",
-    isCompleted: false,
-  },
-  {
-    id: 3,
-    name: "Do coding challenges",
-    isCompleted: true,
-  },
-  {
-    id: 4,
-    name: "Do coding challenges",
-    isCompleted: false,
-  },
-];
-
 export const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [filteredTodos, setFilteredTodos] = useState([]);
