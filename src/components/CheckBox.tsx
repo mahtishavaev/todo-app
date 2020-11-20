@@ -5,10 +5,14 @@ const HiddenCheckBox = styled.input.attrs(() => ({ type: "checkbox" }))`
   display: none;
 `;
 
+type LabelProps = {
+  checked: boolean;
+};
+
 const Label = styled.label.attrs(() => ({
   className: "material-icons",
   children: "check",
-}))`
+}))<LabelProps>`
   width: 24px;
   height: 24px;
   font-size: 22px;
@@ -20,7 +24,17 @@ const Label = styled.label.attrs(() => ({
   background-color: ${(props) => (props.checked ? "#2F80ED" : "#fff")};
 `;
 
-export const CheckBox = ({ checked, onChange, id }) => (
+type CheckBoxProps = {
+  checked: boolean;
+  onChange: () => void;
+  id: string;
+};
+
+export const CheckBox: React.FC<CheckBoxProps> = ({
+  checked,
+  onChange,
+  id,
+}: CheckBoxProps): React.ReactElement => (
   <>
     <Label htmlFor={id} checked={checked} />
     <HiddenCheckBox id={id} checked={checked} onChange={onChange} />

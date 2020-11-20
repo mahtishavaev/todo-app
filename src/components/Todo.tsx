@@ -1,4 +1,3 @@
-import uniqueId from "lodash.uniqueid";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CheckBox } from "./CheckBox";
@@ -28,7 +27,9 @@ const Tabs = styled.div`
   margin-top: 60px;
 `;
 
-const TabLink = styled.button`
+type TabLinkType = { active: boolean };
+
+const TabLink = styled.button<TabLinkType>`
   width: 33.3333%;
   background: none;
   border: none;
@@ -44,7 +45,8 @@ const TabLink = styled.button`
   &::after {
     content: "";
     display: inline-block;
-    background: ${(props) => (props.active ? "#2f80ed" : "transparent")};
+    background: ${(props: TabLinkType) =>
+      props.active ? "#2f80ed" : "transparent"};
     border-radius: 4px 4px 0px 0px;
     height: 4px;
     width: 90px;
@@ -102,11 +104,15 @@ const Task = styled.div`
   align-items: center;
 `;
 
-const TaskText = styled.span`
+type TaskTextType = {
+  completed: boolean;
+};
+const TaskText = styled.span<TaskTextType>`
   font-weight: 500;
   font-size: 18px;
-  text-decoration: ${(props) => (props.completed ? "line-through" : "none")};
-  color: ${(props) => (props.completed ? "#333333" : "#000000")};
+  text-decoration: ${(props: TaskTextType) =>
+    props.completed ? "line-through" : "none"};
+  color: ${(props: TaskTextType) => (props.completed ? "#333333" : "#000000")};
 `;
 
 const DeleteButton = styled.button.attrs(() => ({
@@ -136,13 +142,21 @@ const Footer = styled.footer`
   padding-bottom: 20px;
 `;
 
-export const Todo = () => {
-  const [todos, setTodos] = useState([]);
-  const [filteredTodos, setFilteredTodos] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [filter, setFilter] = useState("All");
+type TodoType = {
+  id: string;
+  name: string;
+  isCompleted: boolean;
+};
 
-  const onCheckBoxClicked = (todo) => {
+type TodosType = TodoType[];
+
+export const Todo: React.FC = (): React.ReactElement => {
+  const [todos, setTodos] = useState<TodosType>([]);
+  const [filteredTodos, setFilteredTodos] = useState<TodosType>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [filter, setFilter] = useState<string>("All");
+
+  const onCheckBoxClicked = (todo: TodoType) => {
     setTodos((prev) => {
       return prev.map((item) =>
         todo.id === item.id ? { ...item, isCompleted: !item.isCompleted } : item
@@ -150,7 +164,7 @@ export const Todo = () => {
     });
   };
 
-  const onInputChanged = (e) => {
+  const onInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
@@ -160,7 +174,7 @@ export const Todo = () => {
         return [
           ...prev,
           {
-            id: uniqueId("id-"),
+            id: Math.random().toString(16).slice(-6),
             name: inputValue,
             isCompleted: false,
           },
@@ -170,18 +184,21 @@ export const Todo = () => {
     }
   };
 
-  const onTabClicked = (e) => {
-    setFilter(e.target.value);
+  const onTabClicked = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setFilter(e.currentTarget.value);
   };
 
-  const onDeleteButtonClicked = (todo) => {
+  const onDeleteButtonClicked = (todo: TodoType) => {
     setTodos((prev) => prev.filter((item) => item.id !== todo.id));
   };
 
   useEffect(() => {
-    localStorage.getItem("todos") === null
-      ? localStorage.setItem("todos", JSON.stringify([]))
-      : setTodos(JSON.parse(localStorage.getItem("todos")));
+    let lsData = localStorage.getItem("todos");
+    if (lsData === null) {
+      localStorage.setItem("todos", JSON.stringify([]));
+    } else {
+      setTodos(JSON.parse(lsData));
+    }
   }, []);
 
   useEffect(() => {
