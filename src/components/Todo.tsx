@@ -7,7 +7,7 @@ const Container = styled.div`
   margin: 0 auto;
   min-height: 100vh;
   font-family: Montserrat;
-  padding-top: 50px;
+  padding: 50px 10px 10px 10px;
   display: flex;
   flex-direction: column;
 `;
@@ -60,6 +60,9 @@ const TabLink = styled.button<TabLinkType>`
 const ControlsWrapper = styled.div`
   margin-top: 20px;
   display: flex;
+  @media (max-width: 575.98px) {
+    flex-direction: column;
+  }
 `;
 
 const Input = styled.input.attrs(() => ({ type: "text" }))`
@@ -96,6 +99,10 @@ const AddButton = styled.button`
   padding: 20px 40px;
   margin-left: 25px;
   cursor: pointer;
+  @media (max-width: 575.98px) {
+    margin-left: 0;
+    margin-top: 10px;
+  }
 `;
 
 const Task = styled.div`
